@@ -1,5 +1,4 @@
 const path = require('path');
-
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const htmlPlugin = new HtmlWebPackPlugin({
   template: './src/index.html',
@@ -7,24 +6,23 @@ const htmlPlugin = new HtmlWebPackPlugin({
 });
 
 module.exports = {
-  mode: 'development',
+  plugins: [htmlPlugin],
   entry: './src/index.js',
-  output: {
-    path: __dirname + '/dist/public',
-    filename: 'bundle.js',
-    publicPath: '/'
-  },
   module: {
     rules: [
       {
-        test: /.jsx?/,
-        include: [__dirname + '/src'],
+        test: /\.(ts|js)x?$/,
+        exclude: /node_modules/,
         use: {
-          loader: 'babel-loader',
+          loader: "babel-loader",
           options: {
-            presets: ['@babel/preset-react']
-          }
-        }
+            presets: [
+              "@babel/preset-env",
+              "@babel/preset-react",
+              "@babel/preset-typescript",
+            ],
+          },
+        },
       },
       {
         test: /\.css$/,
@@ -39,14 +37,6 @@ module.exports = {
     ]
   },
   resolve: {
-    extensions: ['.js', '.jsx']
+    extensions: ['*', '.js', '.jsx'],
   },
-  plugins: [htmlPlugin],
-  devServer: {
-    static: {
-      directory: path.join(__dirname, 'dist'),
-    },
-    compress: true,
-    port: 9000,
-  }
 };
