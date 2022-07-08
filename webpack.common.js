@@ -6,6 +6,9 @@ const htmlPlugin = new HtmlWebPackPlugin({
 });
 
 module.exports = {
+  experiments: {
+    topLevelAwait: true, 
+  },
   plugins: [htmlPlugin],
   entry: './src/index.js',
   module: {
@@ -37,6 +40,6 @@ module.exports = {
     ]
   },
   resolve: {
-    extensions: ['*', '.js', '.jsx'],
+    extensions: ['*', '.js', '.jsx', '.ts', '.tsx'],
   },
 };
