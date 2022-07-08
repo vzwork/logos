@@ -1,5 +1,5 @@
 import {
-  LOAD_NODE
+  LOAD_TREE
 } from '../actions';
 
 export interface INode {
@@ -22,15 +22,12 @@ const treeState:ITreeState = {
 
 const treeReducer = (state = treeState, action: any) => {
   switch (action.type) {
-    case LOAD_NODE:
-      // let newNodes = [...state.nodes];
-      let parentNode:INode = {name: 'parent', id: 'id'};
-      let childNode:INode = {name: 'child', id: 'id'};
-      let treeNode = {parent: parentNode, children: [childNode, childNode]};
-      // newNodes.push(treeNode);
+    case LOAD_TREE:
       return {
         ...state,
-        // nodes: newNodes,
+        topShelf: action.payload[0],
+        midShelf: action.payload[1],
+        botShelf: action.payload[2]
       };
     default:
       return state;

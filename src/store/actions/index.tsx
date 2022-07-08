@@ -1,6 +1,11 @@
-export const LOAD_NODE = 'LOAD_NODE';
+export const LOAD_TREE = 'LOAD_TREE';
 
-export const loadNode = (nodeName:string, nodeId?:string) => ({
-  type: LOAD_NODE,
-  payload: [nodeName, nodeId]
+export interface INode {
+  name: string;
+  id: string;
+}
+
+export const loadTree = (topShelf:INode[], midShelf:INode[], botShelf:INode[]) => ({
+  type: LOAD_TREE,
+  payload: [topShelf, midShelf, botShelf]
 });
