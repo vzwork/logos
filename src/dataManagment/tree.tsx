@@ -1,7 +1,7 @@
 import store from '../store';
 import { loadTree } from '../store/actions';
 import { initializeApp } from 'firebase/app';
-import { getFirestore, doc, getDoc } from 'firebase/firestore';
+import { getFirestore, doc, getDoc, collection, setDoc, addDoc } from 'firebase/firestore';
 const firebaseConfig = {
   apiKey: "AIzaSyC8PjZEfZoL5cJlGBXaFPYkpEQlva72ixk",
   authDomain: "logos-3.firebaseapp.com",
@@ -20,6 +20,8 @@ interface INode {
 }
 
 export class TreeManager {
+  private static instance: TreeManager;
+
   children:Map<string, INode[]>;
   parent:Map<string, INode>;
 
@@ -27,13 +29,21 @@ export class TreeManager {
   midShelf:INode[];
   botShelf:INode[];
 
-  constructor() {
+  private constructor() {
     this.children = new Map<string, INode[]>;
     this.parent = new Map<string, INode>;
 
     this.topShelf = [];
     this.midShelf = [];
     this.botShelf = [];
+  }
+
+  public static getInstance(): TreeManager {
+    if (!TreeManager.instance) {
+      TreeManager.instance = new TreeManager();
+    }
+
+    return TreeManager.instance;
   }
 
   async setBase(node:INode){
@@ -78,5 +88,40 @@ export class TreeManager {
 
     // update the state using redux
     store.dispatch(loadTree(this.topShelf, this.midShelf, this.botShelf));
+  }
+
+  async addNode(parent:INode, childName:string){
+    console.log(childName);
+    return;
+    // add node to the node list
+    addDoc(collection(db, 'nodes'), {
+      children: []
+    }).then((docRef) => {
+      const newId = docRef.id;
+      // update local list (newly created node has no children)
+      this.children.set(newId, []);
+      // add new node's parent
+      this.parent.set(newId, parent);
+      // update new node's parent's children locally
+      let parentsChildren = this.children.get(parent.id);
+      if (!!parentsChildren) {
+        parentsChildren.push({name:childName, id:newId});
+        this.children.delete(parent.id);
+        this.children.set(parent.id, parentsChildren);
+        // update new node's parent's children on firestore
+        const parentDocRef = doc(db, 'nodes', parent.id);
+        setDoc(parentDocRef, {
+          children: parentsChildren
+        }).then((docRef) => {
+          // success
+        }).catch((error) => {
+          console.log('Error while update children object on firestore');
+        });
+      } else {
+        console.log('Unexpected problem when reading children map!');
+      }
+    }).catch((error) => {
+      console.log(error);
+    });
   }
 }

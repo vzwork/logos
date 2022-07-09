@@ -6,9 +6,9 @@ const Shelf = (props) => {
   const nodes = props.nodes;
   return (
     <div className='shelf'>
-      <Node data={{name:'*'}}/>
+      <p className='node'>*</p>
       {nodes.map((item, index)=>{
-          return <Node data={item} key={index}/>
+          return <Node data={item} key={index} treeManager={props.treeManager} />
       })}
     </div>
   );

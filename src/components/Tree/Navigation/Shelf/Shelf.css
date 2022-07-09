@@ -1,5 +1,6 @@
 .shelf {
-  border: 1px solid red;
+  border-top: 1px solid white;
+  margin-bottom: 2px;
   display: flex;
   flex-direction: row;
 }
