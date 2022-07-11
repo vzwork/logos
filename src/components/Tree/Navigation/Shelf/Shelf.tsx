@@ -8,7 +8,7 @@ const Shelf = (props) => {
     <div className='shelf'>
       <p className='node'>*</p>
       {nodes.map((item, index)=>{
-          return <Node data={item} key={index} treeManager={props.treeManager} />
+          return <Node node={item} key={index} />
       })}
     </div>
   );

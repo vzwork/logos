@@ -5,9 +5,9 @@ import Shelf from './Shelf/Shelf';
 const Navigation = (props) => {
   return (
     <div className='navigation'>
-      <Shelf nodes={props.topShelf} treeManager={props.treeManager} />
-      <Shelf nodes={props.midShelf} treeManager={props.treeManager} />
-      <Shelf nodes={props.botShelf} treeManager={props.treeManager} />
+      <Shelf nodes={props.topShelf} />
+      <Shelf nodes={props.midShelf} />
+      <Shelf nodes={props.botShelf} />
     </div>
   );
 }
