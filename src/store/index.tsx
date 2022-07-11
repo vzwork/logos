@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
-import treeReducer from './reducers/index';
+import reducer from './reducers/index';
 
 export default configureStore({
   reducer: {
-    tree: treeReducer
+    state: reducer
   }
 })

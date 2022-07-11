@@ -1,44 +1,30 @@
+import { INode } from '../../data/Node';
 import {
-  LOAD_TREE, SET_BASE_NODE
+  SET_BASE_NODE
 } from '../actions';
 
-export interface INode {
-  name: string;
-  id: string;
-}
-
-export interface ITreeState {
+export interface IState {
   baseNodeId: string;
-  topShelf: INode[] | [];
-  midShelf: INode[] | [];
-  botShelf: INode[] | [];
+  baseNodeName: string;
 }
 
-const treeState:ITreeState = {
-  baseNodeId: '',
-  topShelf: [],
-  midShelf: [],
-  botShelf: [],
+const myState:IState = {
+  baseNodeId: 'default',
+  baseNodeName: 'default'
 };
 
 
-const treeReducer = (state = treeState, action: any) => {
+const reducer = (state = myState, action: any) => {
   switch (action.type) {
-    case LOAD_TREE:
-      return {
-        ...state,
-        topShelf: action.payload[0],
-        midShelf: action.payload[1],
-        botShelf: action.payload[2]
-      };
     case SET_BASE_NODE:
       return {
         ...state,
-        baseNodeId: action.payload
+        baseNodeId: action.payload[0],
+        baseNodeName: action.payload[1]
       }
     default:
       return state;
   };
 }
 
-export default treeReducer;
+export default reducer;

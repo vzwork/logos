@@ -2,18 +2,22 @@ import './Node.css';
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setBaseNode } from '../../../../../store/actions';
+import { TreeManager } from '../../../../../data/manager';
 
 const Node = (props) => {
-  const data = props.data;
-  const id = useSelector((state: any) => state.tree.baseNodeId);
+  const node = props.node;
+  const baseNodeId = useSelector((state: any) => state.state.baseNodeId);
+  const baseNodeName = useSelector((state: any) => state.state.baseNodeName);
+  const baseNode = {id:baseNodeId, name:baseNodeName};
   const dispatch = useDispatch();
-  function select(){
-    dispatch(setBaseNode(data.id));
-    props.treeManager.setBase({name:data.name, id:data.id});
+  async function select(){
+    const treeManager = TreeManager.getInstance();
+    await treeManager.setBaseNode(node);
+    dispatch(setBaseNode(node));
   }
   return (
-    <button onClick={select} className={'node ' + (data.id == id ? 'base' : '')}>
-      {data.name}
+    <button onClick={select} className={'node ' + (baseNode.id == node.id ? 'base' : '')}>
+      {node.name}
     </button>
   );
 }
