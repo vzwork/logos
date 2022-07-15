@@ -1,21 +1,42 @@
 import './App.css';
 import React, { Component } from 'react';
-import { Provider } from 'react-redux';
-import store from './store';
-import * as actions from './store/actions';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-
-
+import { Provider } from 'react-redux';
+import store from "./store";
+import { persistStore } from 'redux-persist';
+import { PersistGate } from 'redux-persist/integration/react'
 import Tree from './components/Tree/Tree';
+import Navbar from './components/Navbar/Navbar';
+import Info from './components/Info/Info';
+import Profile from './components/Profile/Profile';
+import Dashboard from './components/Profile/Dashboard/Dashboard';
+import Login from './components/Profile/Login/Login';
+import Register from './components/Profile/Register/Register';
+import Reset from './components/Profile/Reset/Reset';
+import Guest from './components/Profile/Guest/Guest';
+import { TreeManager } from './data/TreeManager';
 
+const persistor = persistStore(store);
+
+// WUdK1a6fVuO5LjG1KouS
 
 class App extends Component {
+
   constructor(props) {
     super(props);
 
     this.state = {
       light: false
     }
+    
+    // const baseNode = {id:'WUdK1a6fVuO5LjG1KouS', name:'root'}
+    const baseNode = {id:store.getState().baseNodeId, name:store.getState().baseNodeName}
+    if (!baseNode.id || baseNode.id === 'default') {
+      baseNode = {id:'WUdK1a6fVuO5LjG1KouS', name:'root'}
+    }
+    
+    const treeManager = TreeManager.getInstance();
+    treeManager.setBaseNode(baseNode);
 
     this.changeTheme = this.changeTheme.bind(this);
   }
@@ -27,15 +48,26 @@ class App extends Component {
   render() {
     return (
       <Provider store={store}>
-        <div id='App'>
-          <div className={(this.state.light ? 'theme--light' : 'theme--default')}>
-            <BrowserRouter>
-              <Routes>
-                <Route path='/' element={<Tree />}/>
-              </Routes>
-            </BrowserRouter>
+        <PersistGate loading={null} persistor={persistor}>
+          <div id='App'>
+            <div className={(this.state.light ? 'theme--light' : 'theme--default')}>
+              <BrowserRouter>
+                <Navbar />
+                <Routes>
+                  <Route path='/' element={<Info />} />
+                  <Route path='/tree' element={<Tree />} />
+                  <Route path='/profile' element={<Profile />}>
+                    <Route path='guest' element={<Guest />} />
+                    <Route path='dashboard' element={<Dashboard />} />
+                    <Route path='login' element={<Login />} />
+                    <Route path='register' element={<Register />} />
+                    <Route path='reset' element={<Reset />} />
+                  </Route>
+                </Routes>
+              </BrowserRouter>
+            </div>
           </div>
-        </div>
+        </PersistGate>
       </Provider>
     );
   }
